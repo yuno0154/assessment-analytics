@@ -93,21 +93,21 @@ def set_config(path: str, value):
 
 # 하위 호환성을 위한 속성 접근 (기존 코드와 호환)
 if 'eval_type' not in st.session_state:
-    st.session_state.eval_type = get_config('eval.eval_type')
+    st.session_state.eval_type = get_config('eval.eval_type', 'achievement')
 if 'criterion_rate' not in st.session_state:
-    st.session_state.criterion_rate = get_config('eval.criterion_rate')
+    st.session_state.criterion_rate = get_config('eval.criterion_rate', 66.7)
 if 'target_rate' not in st.session_state:
-    st.session_state.target_rate = get_config('eval.target_rate')
+    st.session_state.target_rate = get_config('eval.target_rate', 70.0)
 if 'level_type' not in st.session_state:
-    st.session_state.level_type = get_config('eval.level_type')
+    st.session_state.level_type = get_config('eval.level_type', "5수준+미도달 (A, B, C, D, E, 미도달)")
 if 'eval_plan' not in st.session_state:
-    st.session_state.eval_plan = get_config('plan')
+    st.session_state.eval_plan = get_config('plan', {'regular': {}, 'performance': []})
 if 'selected_analysis_type' not in st.session_state:
-    st.session_state.selected_analysis_type = get_config('selected.analysis_type')
+    st.session_state.selected_analysis_type = get_config('selected.analysis_type', None)
 if 'selected_analysis_category' not in st.session_state:
-    st.session_state.selected_analysis_category = get_config('selected.analysis_category')
+    st.session_state.selected_analysis_category = get_config('selected.analysis_category', None)
 if 'analysis_basis' not in st.session_state:
-    st.session_state.analysis_basis = get_config('selected.analysis_basis')
+    st.session_state.analysis_basis = get_config('selected.analysis_basis', '분할점수 기반')
 if 'exam_category' not in st.session_state:
     st.session_state.exam_category = get_config('selected.exam_category')
 
@@ -1183,7 +1183,7 @@ with st.sidebar:
             "📊 기준 정답률 (성취수준별 최소 도달 비율)",
             min_value=50.0,
             max_value=100.0,
-            value=st.session_state.criterion_rate,
+            value=float(st.session_state.criterion_rate or 66.7),
             step=0.1,
             key="criterion_rate_input",
             help="각 성취수준 학생의 최소 정답률 기준 (기본값: 66.7% = KICE 2/3 기준)\n"
@@ -1216,7 +1216,7 @@ with st.sidebar:
             "🎯 목표 정답률 (%)",
             min_value=30.0,
             max_value=90.0,
-            value=st.session_state.target_rate,
+            value=float(st.session_state.target_rate or 70.0),
             step=5.0,
             key="target_rate_slider",
             help="문항의 적정 난이도를 판단하는 기준"
